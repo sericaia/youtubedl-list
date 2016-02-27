@@ -4,7 +4,7 @@ var fs = require('fs');
 var youtubedl = require('youtube-dl');
 var async = require('async');
 
-var outputFolder = 'output/';
+var outputFolder = 'output';
 
 function getVideo(videoURL) {
   console.log('videoURL:', videoURL);
@@ -24,7 +24,7 @@ function getVideo(videoURL) {
     console.log('filename: ' + info._filename);
 
     video
-      .pipe(fs.createWriteStream(outputFolder + getFileName(info._filename)));
+      .pipe(fs.createWriteStream(outputFolder + '/' + getFileName(info._filename)));
   });
 }
 
@@ -52,6 +52,12 @@ fs.readFile( __dirname + '/' + process.argv[2], function (err, data) {
     throw err;
   }
 
+  // create folder if it does not exist
+  if (!fs.existsSync(outputFolder)){
+    fs.mkdirSync(outputFolder);
+  }
+
+  // process videos
   var videoTokens = data.toString().split('\n');
   processEachVideo(videoTokens);
 });
