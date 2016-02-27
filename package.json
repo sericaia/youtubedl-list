@@ -1,0 +1,27 @@
+{
+  "name": "youtubedl-list",
+  "version": "1.0.0",
+  "description": "Downloads mp4 from a list of URLs",
+  "main": "index.js",
+  "dependencies": {
+    "youtube-dl": "^1.10.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sericaia/youtubedl-list"
+  },
+  "keywords": [
+    "youtubedl",
+    "list"
+  ],
+  "author": "Daniela Borges <alunassertiva@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sericaia/youtubedl-list/issues"
+  },
+  "homepage": "https://github.com/sericaia/youtubedl-list"
+}
