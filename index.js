@@ -6,10 +6,8 @@ var async = require('async');
 
 var outputFolder = 'output';
 
-function getVideo(videoURL) {
+function getVideo(videoURL, format) {
   console.log('videoURL:', videoURL);
-  var video = youtubedl(videoURL, ['--format=18'], { cwd: __dirname });
-
 
   function getFileName(infoFilename) {
     // remove id from filename
@@ -17,18 +15,39 @@ function getVideo(videoURL) {
     var id = urlTokens[urlTokens.length - 1];
     return infoFilename.replace('-' + id, '');
   }
+  
+  switch(format) {
+    case 'mp4': {
+      var video = youtubedl(videoURL, ['--format=18'], { cwd: __dirname });
 
-  // Will be called when the download starts.
-  video.on('info', function(info) {
-    console.log('Download started');
-    console.log('filename: ' + info._filename);
+      // Will be called when the download starts.
+      video.on('info', function(info) {
+        console.log('Download started');
+        console.log('filename: ' + info._filename);
 
-    video
-      .pipe(fs.createWriteStream(outputFolder + '/' + getFileName(info._filename)));
-  });
+        video
+          .pipe(fs.createWriteStream(outputFolder + '/' + getFileName(info._filename)));
+      });
+
+      break;
+    }
+    default: {
+      // mp3
+      // does some magic using youtubedl: downloads webm, turns into mp3, deletes webm
+      youtubedl.exec(videoURL,
+        ['-x', '--audio-format', 'mp3'],
+        { cwd: __dirname + '/' + outputFolder },
+        function(err, output) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log(output.join('\n'));
+      });
+    }
+  }
 }
 
-function processEachVideo(videoTokens) {
+function processEachVideo(videoTokens, format) {
   async.each(videoTokens,
     function(videoURL, callback) {
 
@@ -37,7 +56,7 @@ function processEachVideo(videoTokens) {
       }
 
       // request video
-      getVideo(videoURL);
+      getVideo(videoURL, format);
       callback();
     }, function(err) {
       if(err) {
@@ -59,5 +78,6 @@ fs.readFile( __dirname + '/' + process.argv[2], function (err, data) {
 
   // process videos
   var videoTokens = data.toString().split('\n');
-  processEachVideo(videoTokens);
+  var format = process.argv[3]; // mp3 and mp4 supported
+  processEachVideo(videoTokens, format);
 });

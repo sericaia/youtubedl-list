@@ -1,10 +1,11 @@
 {
   "name": "youtubedl-list",
   "version": "1.0.0",
-  "description": "Downloads mp4 from a list of URLs",
+  "description": "Downloads mp3 or mp4 from a list of URLs",
   "main": "index.js",
   "dependencies": {
-    "youtube-dl": "^1.10.5"
+    "async": "^2.0.0",
+    "youtube-dl": "^1.11.1"
   },
   "devDependencies": {},
   "scripts": {
